@@ -4,3 +4,4 @@ def main(content,data):
 main('content','data')
 # this is practice
 # lets see what happens
+# ymal file removed
