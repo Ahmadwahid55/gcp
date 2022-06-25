@@ -11,7 +11,7 @@ steps:
         echo "***********************"
 
   - id: 'tf init'
-    name: 'gcr.io/GCP/terraform'
+    name: 'gcr.io/gcp/terraform'
     entrypoint: 'sh'
     args:
       - '-c'
