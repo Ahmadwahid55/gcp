@@ -1,36 +1,100 @@
-# try again
 steps:
 
-  - id: 'tf plan'
-    name: 'hashicorp/terraform:1.0.0'
-    entrypoint : 'sh'
+  - id: 'branch name'
+    name: 'alpine'
+    entrypoint: 'sh'
     args:
-    - '-c'
-    - |
-        echo "branch $BRANCH_NAME"
-        if [! -z "$BRANCH_NAME" -a -d "terraform/environments/$BRANCH_NAME/" ]; then
-          cd terraform/environments/$BRANCH_NAME
-          echo "run init"
-          terraform init
-          echo "terraform validate"
-          terraform validate
-          echo "run plan"
-          terraform plan -out terraform.plan
-          terraform apply -auto-approve terraform.plan
-      else 
-        for dir in terraform/environments/*/
-        do
-          cd ${dir}
-          env = ${dir%*/}
-          env = ${env#*/}
-          echo ""
-          echo "********** TERRAFORM PLAN ************"
-          echo "****** At environment: ${env} ********"
-          echo "**************************************"
-          terraform init
-          terraform validate
-          terraform plan || exit 1
-          cd ../../
-      done
-    fi
-        
+      - '-c'
+      - |
+        echo "***********************"
+        echo "$_BRANCH_NAME"
+        echo "***********************"
+options:
+  logging: CLOUD_LOGGING_ONLY
+#  - id: 'tf init'
+#    name: 'gcr.io/thermosphr-base/terraform'
+#    entrypoint: 'sh'
+#    args:
+#      - '-c'
+#      - |
+#        if [ -d "terraform/environments/$_BRANCH_NAME/" ]; then
+#          cd terraform/environments/$_BRANCH_NAME
+#
+#          for dir in */
+#          do
+#            cd ${dir}
+#            env=${dir%*/}
+#            env=${env#*/}
+#            echo ""
+#            echo "*************** TERRAFORM INIT ******************"
+#            echo "******* At environment: ${env} ********"
+#            echo "*************************************************"
+#            terraform init || exit 1
+#            cd ../
+#          done
+#        else
+#          echo "***************************** SKIPPING INIT ***********************************"
+#          echo "Branch '$_BRANCH_NAME' does not represent an oficial environment."
+#          echo "*******************************************************************************"
+#          echo $BUILD_ID
+#          gcloud builds cancel $BUILD_ID > /dev/null || true
+#        fi
+#  - id: 'tf plan'
+#    name: 'gcr.io/thermosphr-base/terraform'
+#    entrypoint: 'sh'
+#    args:
+#      - '-c'
+#      - |
+#        if [ -d "terraform/environments/$_BRANCH_NAME/" ]; then
+#          cd terraform/environments/$_BRANCH_NAME
+#
+#          for dir in */
+#          do
+#            cd ${dir}
+#            env=${dir%*/}
+#            env=${env#*/}
+#            echo ""
+#            echo "*************** TERRAFORM PLAN ******************"
+#            echo "******* At environment: ${env} ********"
+#            echo "*************************************************"
+#            terraform plan || exit 1
+#            cd ../
+#          done
+#        else
+#          echo "***************************** SKIPPING PLAN ***********************************"
+#          echo "Branch '$_BRANCH_NAME' does not represent an oficial environment."
+#          echo "*******************************************************************************"
+#          echo $BUILD_ID
+#          gcloud builds cancel $BUILD_ID > /dev/null || true
+#        fi
+#  # [END tf-plan]
+#
+#  # [START tf-apply]
+#  - id: 'tf apply'
+#    name: 'gcr.io/thermosphr-base/terraform'
+#    entrypoint: 'sh'
+#    args:
+#      - '-c'
+#      - |
+#        if [ -d "terraform/environments/$_BRANCH_NAME/" ]; then
+#          cd terraform/environments/$_BRANCH_NAME
+#          for dir in */
+#          do
+#            cd ${dir}
+#            env=${dir%*/}
+#            env=${env#*/}
+#            echo ""
+#            echo "*************** TERRAFORM APPLY ******************"
+#            echo "******* At environment: ${env} ********"
+#            echo "**************************************************"
+#            terraform apply -auto-approve || exit 1
+#            cd ../
+#          done
+#        else
+#          echo "***************************** SKIPPING APPLY **********************************"
+#          echo "Branch '$_BRANCH_NAME' does not represent an oficial environment."
+#          echo "*******************************************************************************"
+#          echo $BUILD_ID
+#          gcloud builds cancel $BUILD_ID > /dev/null || true
+#        fi
+timeout: 2400s
