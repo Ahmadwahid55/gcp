@@ -9,36 +9,35 @@ steps:
         echo "***********************"
         echo "$_BRANCH_NAME"
         echo "***********************"
-options:
-  logging: CLOUD_LOGGING_ONLY
-#  - id: 'tf init'
-#    name: 'gcr.io/thermosphr-base/terraform'
-#    entrypoint: 'sh'
-#    args:
-#      - '-c'
-#      - |
-#        if [ -d "terraform/environments/$_BRANCH_NAME/" ]; then
-#          cd terraform/environments/$_BRANCH_NAME
-#
-#          for dir in */
-#          do
-#            cd ${dir}
-#            env=${dir%*/}
-#            env=${env#*/}
-#            echo ""
-#            echo "*************** TERRAFORM INIT ******************"
-#            echo "******* At environment: ${env} ********"
-#            echo "*************************************************"
-#            terraform init || exit 1
-#            cd ../
-#          done
-#        else
-#          echo "***************************** SKIPPING INIT ***********************************"
-#          echo "Branch '$_BRANCH_NAME' does not represent an oficial environment."
-#          echo "*******************************************************************************"
-#          echo $BUILD_ID
-#          gcloud builds cancel $BUILD_ID > /dev/null || true
-#        fi
+
+  - id: 'tf init'
+    name: 'gcr.io/gcp/terraform'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        if [ -d "terraform/environments/$_BRANCH_NAME/" ]; then
+          cd terraform/environments/$_BRANCH_NAME
+
+          for dir in */
+          do
+            cd ${dir}
+            env=${dir%*/}
+            env=${env#*/}
+            echo ""
+            echo "*************** TERRAFORM INIT ******************"
+            echo "******* At environment: ${env} ********"
+            echo "*************************************************"
+            terraform init || exit 1
+            cd ../
+          done
+        else
+          echo "***************************** SKIPPING INIT ***********************************"
+          echo "Branch '$_BRANCH_NAME' does not represent an oficial environment."
+          echo "*******************************************************************************"
+          echo $BUILD_ID
+          gcloud builds cancel $BUILD_ID > /dev/null || true
+        fi
 #  - id: 'tf plan'
 #    name: 'gcr.io/thermosphr-base/terraform'
 #    entrypoint: 'sh'
@@ -97,4 +96,6 @@ options:
 #          echo $BUILD_ID
 #          gcloud builds cancel $BUILD_ID > /dev/null || true
 #        fi
+options:
+  logging: CLOUD_LOGGING_ONLY
 timeout: 2400s
