@@ -9,7 +9,9 @@ steps:
         echo "***********************"
         echo "$_BRANCH_NAME"
         echo "***********************"
-#  - id: 'tf init' /
+options:
+  logging: CLOUD_LOGGING_ONLY
+#  - id: 'tf init'
 #    name: 'gcr.io/thermosphr-base/terraform'
 #    entrypoint: 'sh'
 #    args:
