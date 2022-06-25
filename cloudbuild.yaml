@@ -4,8 +4,7 @@ on :
     branches:
       -terraform/ResourceGroup
 steps:
-  - jobs:
-      terraform:
+     - terraform:
         name: "Terraform init"
         runs-on : windows
         steps:
