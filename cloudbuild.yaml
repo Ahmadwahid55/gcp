@@ -3,17 +3,18 @@ on :
   push:
     branches:
       -terraform/ResourceGroup
-jobs:
-  terraform:
-    name: "Terraform init"
-    runs-on : windows
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@master
-      - name: "Terraform Initialization"
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 1.1.3
-          tf_actions_subcommand: "init"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+steps:
+  - jobs:
+      terraform:
+        name: "Terraform init"
+        runs-on : windows
+        steps:
+          - name: "Checkout"
+            uses: actions/checkout@master
+          - name: "Terraform Initialization"
+            uses: hashicorp/terraform-github-actions@master
+            with:
+              tf_actions_version: 1.1.3
+              tf_actions_subcommand: "init"
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
