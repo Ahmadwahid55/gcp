@@ -1,5 +1,6 @@
 # all required resources will be defined here.
-
+# don't know
+#try
 provider "google" {
   project = var.project
   region = var.region
